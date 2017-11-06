@@ -1,9 +1,7 @@
 <?php
 function scrap_ffxiv($url) {
-	$id = "6318718";
 
-	$html = file_get_html('cache/6318718');
-
+	$html = file_get_html($url);
 	$character->Name = $html->find('p.frame__chara__name',0)->plaintext;
 	$character->Image = $html->find('div.character__detail__image',0)->find('img',0)->src;
 	$character->FC = $html->find('div.character__freecompany__name',0)->find('a',0)->plaintext;
@@ -17,7 +15,10 @@ function scrap_ffxiv($url) {
 	$character->Introduction = $html->find('.character__selfintroduction',0)->plaintext;
 
 	$character->HP = $html->find('.character__param__text__hp--en-gb',0)->next_sibling()->plaintext;
-	$character->MP = $html->find('.character__param__text__mp--en-gb',0)->next_sibling()->plaintext;
+	if (is_object($html->find('.character__param__text__mp--en-gb',0)))
+		$character->MP = $html->find('.character__param__text__mp--en-gb',0)->next_sibling()->plaintext;
+	else
+		$character->MP = 0;
 	$character->TP = $html->find('.character__param__text__tp--en-gb',0)->next_sibling()->plaintext;
 
 	$character->Strength = $html->find('.character__param__list',0)->find('td',0)->plaintext;
